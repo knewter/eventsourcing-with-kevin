@@ -1,8 +1,10 @@
 class Event
-  attr_accessor :occurred_at, :recorded_at
-  
-  def initialize occurred_at=Time.now
+  attr_accessor :recorded_at
+  attr_reader   :occurred_at, :payload, :type
+
+  def initialize type, occurred_at=Time.now, payload={}
+    @type = type
     @occurred_at = occurred_at
+    @payload = payload
   end
-  
 end
