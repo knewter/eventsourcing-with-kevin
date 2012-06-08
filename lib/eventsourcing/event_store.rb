@@ -1,11 +1,23 @@
 class EventStore
-  def push(event)
+  def initialize
+    @subscribers = []
+  end
+
+  def push event
     # Push the event on the stack
     events << event
-    # Process it
-    event.process
     # Return it
     event
+  end
+
+  def add_subscriber subscriber
+    @subscribers << subscriber
+  end
+
+  def publish event
+    @subscribers.each do |subscriber|
+      subscriber.handle(event)
+    end
   end
 
   def events

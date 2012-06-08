@@ -13,11 +13,6 @@ describe EventStore::Array do
     @store.push(@mock_event).must_equal @mock_event
   end
 
-  it "calls #process on events passed in" do
-    @store.push(@mock_event)
-    assert @mock_event.verify
-  end
-
   it "returns events from starting point" do
     @store.push(@mock_event)
     @store.push(@mock_event2)
