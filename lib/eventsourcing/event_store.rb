@@ -1,6 +1,10 @@
 class EventStore
   def push(event)
+    # Push the event on the stack
     events << event
+    # Process it
+    event.process
+    # Return it
     event
   end
 

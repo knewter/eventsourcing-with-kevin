@@ -3,10 +3,16 @@ require_relative '../../../spec_helper'
 describe EventStore::Array do
   before do
     @store = EventStore::Array.new
+    @mock_event = MiniTest::Mock.new
+    @mock_event.expect(:process, nil)
   end
 
   it "adds an event to the list" do
-    new_event = {}
-    @store.push(new_event).must_equal new_event
+    @store.push(@mock_event).must_equal @mock_event
+  end
+
+  it "calls #process on events passed in" do
+    @store.push(@mock_event)
+    assert @mock_event.verify
   end
 end
