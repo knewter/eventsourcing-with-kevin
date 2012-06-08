@@ -21,7 +21,7 @@ describe EventStore::Array do
     @store.push(@mock_event)
     @store.push(@mock_event2)
     @store.events_from = [@mock_event,@mock_event2]
-    @store.events(1) = [@mock_event2]
+    @store.events_from(1) = [@mock_event2]
   end
   
 end
