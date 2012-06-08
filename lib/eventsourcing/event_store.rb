@@ -1,11 +1,9 @@
 require 'celluloid'
 
 class EventStore
-  include Celluloid
-
   def push(event)
     events << event
-    return event
+    event
   end
 
   def events
