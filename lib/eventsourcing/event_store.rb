@@ -1,5 +1,3 @@
-require 'celluloid'
-
 class EventStore
   def push(event)
     events << event
