@@ -5,8 +5,7 @@ describe EventStore do
     @store = EventStore.new
   end
 
-  it "adds an event to the list" do
-    new_event = {}
-    @store.push(new_event).must_equal new_event
+  it "raises on #events" do
+    lambda{ @store.events }.must_raise
   end
 end
