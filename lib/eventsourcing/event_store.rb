@@ -1,6 +1,5 @@
 class EventStore
   def push(event)
-    event.recorded_at = Time.now
     # Push the event on the stack
     events << event
     # Process it

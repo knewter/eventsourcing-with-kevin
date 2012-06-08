@@ -20,8 +20,8 @@ describe EventStore::Array do
   it "returns events from starting point" do
     @store.push(@mock_event)
     @store.push(@mock_event2)
-    @store.events_from = [@mock_event,@mock_event2]
-    @store.events_from(1) = [@mock_event2]
+    @store.events_from.must_equal([@mock_event,@mock_event2])
+    @store.events_from.must_equal([@mock_event2])
   end
   
 end
