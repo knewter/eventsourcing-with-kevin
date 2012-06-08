@@ -11,7 +11,7 @@ class EventStore
   def events
     raise "This is the abstract EventStore.  Override the event storage method in a given implementation."
   end
-  
+
   def events_from start=nil
     raise "This is the abstract EventStore.  Override the events_from method in a given implementation."
   end
