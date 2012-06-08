@@ -6,6 +6,7 @@ GEM
 
 PLATFORMS
   java
+  ruby
 
 DEPENDENCIES
   celluloid
