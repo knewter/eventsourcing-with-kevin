@@ -6,6 +6,6 @@ describe EventStore do
   end
 
   it "raises on #events" do
-    lambda{ @store.events }.must_raise
+    lambda{ @store.events }.must_raise RuntimeError
   end
 end
