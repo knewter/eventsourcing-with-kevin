@@ -6,7 +6,7 @@ describe EventStore::Array do
     @mock_event = MiniTest::Mock.new
     @mock_event2 = MiniTest::Mock.new
     @mock_event.expect(:process, nil)
-    @mock_event.expect(:process, nil)
+    @mock_event2.expect(:process, nil)
   end
 
   it "adds an event to the list" do

@@ -9,7 +9,7 @@ describe EventStore do
     lambda{ @store.events }.must_raise RuntimeError
   end
   
-  it "raises on #events" do
+  it "raises on #events_from" do
     lambda{ @store.events_from }.must_raise RuntimeError
   end
 end
