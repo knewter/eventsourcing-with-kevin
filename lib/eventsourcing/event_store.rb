@@ -8,7 +8,7 @@ class EventStore
     event
   end
 
-  def events
+  def events start=nil
     raise "This is the abstract EventStore.  Override the event storage method in a given implementation."
   end
 end

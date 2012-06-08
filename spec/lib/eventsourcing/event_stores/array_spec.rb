@@ -4,6 +4,7 @@ describe EventStore::Array do
   before do
     @store = EventStore::Array.new
     @mock_event = MiniTest::Mock.new
+    @mock_event2 = MiniTest::Mock.new
     @mock_event.expect(:process, nil)
   end
 
@@ -15,4 +16,12 @@ describe EventStore::Array do
     @store.push(@mock_event)
     assert @mock_event.verify
   end
+  
+  it "returns events from starting point" do
+    @store.push(@mock_event)
+    @store.push(@mock_event2)
+    @store.events() = [@mock_event,@mock_event2]
+    @store.events(1) = [@mock_event2]
+  end
+  
 end

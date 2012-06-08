@@ -6,7 +6,7 @@ class EventStore::Array < EventStore
     @events = []
   end
 
-  def events
-    @events
+  def events start=0
+    @events[start..-1]
   end
 end

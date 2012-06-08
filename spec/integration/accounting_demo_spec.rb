@@ -6,11 +6,17 @@ describe "Accounting demo" do
     @josh  = Account.new(name: 'Josh')
     @kevin = Account.new(name: 'Kevin')
     @event = Event.new('MoneyTransferEvent', {from: 'josh', to: 'kevin', amount: '500'})
+    @money_processor = MoneyProcessor.new
+  end
+  
+  it "creates event" do
+  end
+  
+  it "adds event to event store" do
+  end
+  
+  it "reads events and changes objects" do
   end
 
-  it "publishes events to accounts" do
-    @store.push(@event)
-    @josh.seen_events.must_include(@event)
-    @kevin.seen_events.must_include(@event)
-  end
+  
 end
