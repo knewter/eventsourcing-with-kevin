@@ -35,6 +35,10 @@ class LedgerStore
   def initialize
     @accounts = {}
   end
+  
+  def accounts 
+    @accounts
+  end
 
   def add_account name
     account = Account.new(name)
@@ -43,18 +47,6 @@ class LedgerStore
   
   def find_account name
     @accounts[name]
-  end
-
-  def each &block
-    @accounts.values.each do |account|
-      block.call(account)
-    end
-  end
-  
-  def chart_of_accounts
-    @accounts.each do |account|
-      puts account
-    end
   end
 end
 
@@ -69,10 +61,31 @@ class CommandProcessor < Processor
   end
 end
 
+class ChartOfAccountsPrinter
+  def self.print
+    Ledger.accounts.each do |account|
+      puts account
+    end
+  end
+end
+
+class AccountsListProcessor < Processor
+  def process event
+    # I don't care about the event, I'm going to publish the event and then the
+    # state of all the accounts after that event.
+    puts "---------------------------"
+    puts "New event received: #{event.inspect}"
+    puts "---------------------------"
+    puts ""
+  end
+end
+
 Ledger = LedgerStore.new
 command_processor = CommandProcessor.new
+accounts_list_processor = AccountsListProcessor.new
 store = EventStore::Array.new
 store.add_subscriber(command_processor)
+store.add_subscriber(accounts_list_processor)
 
 events = []
 events << Event.new('CreateAccount', {name: 'bank'})
@@ -83,4 +96,4 @@ events.each do |event|
   store.push(event)
 end
 
-Ledger.chart_of_accounts
+ChartOfAccountsPrinter.print
