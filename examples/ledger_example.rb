@@ -65,7 +65,7 @@ class ChartOfAccountsPrinter
   def self.print
     puts "#{Ledger.accounts.size} Accounts"
     puts "_____________________________________"
-    Ledger.accounts.each do |account|
+    Ledger.accounts.each_pair do |name, account|
       puts account
     end
   end
