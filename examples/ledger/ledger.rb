@@ -1,90 +1,14 @@
 require 'bigdecimal'
 
-require_relative '../lib/boot'
+require_relative '../../lib/boot'
+require_relative './domain/account'
+require_relative './domain/entry'
+require_relative './store/ledger_store'
+require_relative './handlers/create_account_handler'
+require_relative './handlers/add_entry_handler'
+
 # Provide a slightly more real-world example, though still hugely contrived.
 # Keep track of a ledger of accounts with events sent to the eventstore.
-
-class Account
-  def initialize number,name
-    @number = number
-    @name = name
-    @subaccounts = []
-    @entries = []
-  end
-
-  def number
-    @number
-  end
-
-  def name
-    @name
-  end
-
-  def balance
-    entries.map(&:amount).inject(BigDecimal.new('0.00'), :+)
-  end
-
-  def formatted_balance
-    balance.to_s('F')
-  end
-
-  def add_subaccount account
-    @subaccounts << account
-  end
-
-  def add_entry entry
-    @entries << entry
-  end
-
-  def entries
-    @entries
-  end
-end
-
-class Entry
-  attr_accessor :amount
-
-  def initialize amount
-    @amount = amount
-  end
-end
-
-class LedgerStore
-  def initialize
-    @accounts = {}
-  end
-
-  def accounts
-    @accounts
-  end
-
-  def add_account number, name, parent
-    new_account = Account.new(number,name)
-    @accounts[number] = new_account
-    if parent_account = find_account(parent)
-      parent_account.add_subaccount(new_account)
-    end
-  end
-
-  def find_account number
-    @accounts[number]
-  end
-end
-
-class CreateAccountHandler
-  def process event
-    Ledger.add_account event.payload[:number], event.payload[:name], event.payload[:parent]
-  end
-end
-
-class AddEntryHandler
-  def process event
-    account_number = event.payload[:account]
-    amount = BigDecimal.new(event.payload[:amount])
-    account = Ledger.find_account(account_number)
-    account.add_entry(Entry.new(amount))
-  end
-end
 
 class ChartOfAccountsPrinter
   def self.print
