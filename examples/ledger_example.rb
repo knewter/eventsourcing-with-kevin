@@ -88,9 +88,11 @@ store.add_subscriber(command_processor)
 store.add_subscriber(accounts_list_processor)
 
 events = []
-events << Event.new('CreateAccount', {name: 'bank'})
-events << Event.new('CreateAccount', {name: 'kevin'})
-events << Event.new('CreateAccount', {name: 'josh'})
+events << Event.new('CreateAccount', {name: 'assets'})
+events << Event.new('CreateAccount', {name: 'liabilities'})
+events << Event.new('CreateAccount', {name: 'equity'})
+events << Event.new('CreateAccount', {name: 'revenue'})
+events << Event.new('CreateAccount', {name: 'expense'})
 
 events.each do |event|
   store.push(event)
