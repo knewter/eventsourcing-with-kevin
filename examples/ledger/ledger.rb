@@ -6,21 +6,10 @@ require_relative './domain/entry'
 require_relative './store/ledger_store'
 require_relative './handlers/create_account_handler'
 require_relative './handlers/add_entry_handler'
+require_relative './reports/chart_of_accounts_printer'
 
 # Provide a slightly more real-world example, though still hugely contrived.
 # Keep track of a ledger of accounts with events sent to the eventstore.
-
-class ChartOfAccountsPrinter
-  def self.print
-    puts "#{Ledger.accounts.size} Accounts"
-    puts "_____________________________________"
-    sorted_account_keys = Ledger.accounts.keys.sort
-    sorted_account_keys.each do |key|
-      account = Ledger.find_account(key)
-      puts "#{account.number} - #{account.name} - #{account.formatted_balance}"
-    end
-  end
-end
 
 # Initialize a ledger store
 # FIXME: This definitely needs to be....better.
