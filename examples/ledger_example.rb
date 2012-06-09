@@ -8,8 +8,8 @@ class Account
   def initialize number,name
     @number = number
     @name = name
-    @balance = BigDecimal('0.0')
     @subaccounts = []
+    @entries = []
   end
   
   def number
@@ -20,22 +20,34 @@ class Account
     @name
   end
 
-  def debit(amount)
-    @balance -= amount
-  end
-
-  def credit(amount)
-    @balance += amount
-  end
-
   def balance
-    @balance
+    entries.map(&:amount).inject(BigDecimal.new('0.00'), :+)
+  end
+  
+  def formatted_balance
+    balance.to_s('F')
   end
 
   def add_subaccount account
     @subaccounts << account
   end
+  
+  def add_entry entry
+    @entries << entry
+  end
+  
+  def entries
+    @entries
+  end
+  
+end
 
+class Entry
+  attr_accessor :amount
+  
+  def initialize amount
+    @amount = amount
+  end
 end
 
 class LedgerStore
@@ -60,9 +72,18 @@ class LedgerStore
   end
 end
 
-class AddAccountHandler
+class CreateAccountHandler
   def process event
     Ledger.add_account event.payload[:number], event.payload[:name], event.payload[:parent]
+  end
+end
+
+class AddEntryHandler
+  def process event
+    account_number = event.payload[:account]
+    amount = BigDecimal.new(event.payload[:amount])
+    account = Ledger.find_account(account_number)
+    account.add_entry(Entry.new(amount))
   end
 end
 
@@ -73,30 +94,19 @@ class ChartOfAccountsPrinter
     sorted_account_keys = Ledger.accounts.keys.sort
     sorted_account_keys.each do |key|
       account = Ledger.find_account(key)
-      puts "#{account.number} - #{account.name}"
+      puts "#{account.number} - #{account.name} - #{account.formatted_balance}"
     end
   end
 end
 
-class AccountsListProcessor < Processor
-  def process event
-    # I don't care about the event, I'm going to publish the event and then the
-    # state of all the accounts after that event.
-    puts "---------------------------"
-    puts "New event received: #{event.inspect}"
-    puts "---------------------------"
-    puts ""
-  end
-end
-
 Ledger = LedgerStore.new
-add_account_handler = AddAccountHandler.new
+create_account_handler = CreateAccountHandler.new
+add_entry_handler = AddEntryHandler.new
 command_processor = CommandProcessor.new
-command_processor.add_handler('CreateAccount', add_account_handler)
-accounts_list_processor = AccountsListProcessor.new
+command_processor.add_handler('CreateAccount', create_account_handler)
+command_processor.add_handler('AddEntry', add_entry_handler)
 store = EventStore::Array.new
 store.add_subscriber(command_processor)
-store.add_subscriber(accounts_list_processor)
 
 events = []
 events << Event.new('CreateAccount', {number: '1000', name: 'assets'})
@@ -107,6 +117,8 @@ events << Event.new('CreateAccount', {number: '5000', name: 'expense'})
 events << Event.new('CreateAccount', {number: '1100', name: 'cash', :parent => '1000'})
 events << Event.new('CreateAccount', {number: '1200', name: 'receivables', :parent => '1000'})
 events << Event.new('CreateAccount', {number: '2100', name: 'payables', :parent => '2000'})
+events << Event.new('AddEntry', {account: '1100', amount: '100'})
+events << Event.new('AddEntry', {account: '3000', amount: '-100'})
 
 events.each do |event|
   store.push(event)
