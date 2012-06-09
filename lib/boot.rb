@@ -2,4 +2,4 @@ require 'bundler'
 
 Bundler.setup
 
-require 'eventsourcing'
+require_relative 'eventsourcing'

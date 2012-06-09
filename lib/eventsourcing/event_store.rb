@@ -6,6 +6,8 @@ class EventStore
   def push event
     # Push the event on the stack
     events << event
+    # Publish the event to any subscribers
+    publish event
     # Return it
     event
   end
@@ -16,7 +18,7 @@ class EventStore
 
   def publish event
     @subscribers.each do |subscriber|
-      subscriber.handle(event)
+      subscriber.process(event)
     end
   end
 
