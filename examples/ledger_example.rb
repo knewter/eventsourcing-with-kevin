@@ -11,7 +11,7 @@ class Account
     @subaccounts = []
     @entries = []
   end
-  
+
   def number
     @number
   end
@@ -23,7 +23,7 @@ class Account
   def balance
     entries.map(&:amount).inject(BigDecimal.new('0.00'), :+)
   end
-  
+
   def formatted_balance
     balance.to_s('F')
   end
@@ -31,20 +31,19 @@ class Account
   def add_subaccount account
     @subaccounts << account
   end
-  
+
   def add_entry entry
     @entries << entry
   end
-  
+
   def entries
     @entries
   end
-  
 end
 
 class Entry
   attr_accessor :amount
-  
+
   def initialize amount
     @amount = amount
   end
@@ -99,13 +98,23 @@ class ChartOfAccountsPrinter
   end
 end
 
+# Initialize a ledger store
+# FIXME: This definitely needs to be....better.
+# A repository to find this in would be nice I'd think.
 Ledger = LedgerStore.new
+
+# Initialize all of the event handlers we'll be registering
 create_account_handler = CreateAccountHandler.new
 add_entry_handler = AddEntryHandler.new
+
+# Initialize the CommandProcessor, and register the handlers
 command_processor = CommandProcessor.new
 command_processor.add_handler('CreateAccount', create_account_handler)
 command_processor.add_handler('AddEntry', add_entry_handler)
+
+# Create the eventstore
 store = EventStore::Array.new
+# Subscribe the commandprocessor to the eventstore
 store.add_subscriber(command_processor)
 
 events = []
@@ -120,8 +129,10 @@ events << Event.new('CreateAccount', {number: '2100', name: 'payables', :parent 
 events << Event.new('AddEntry', {account: '1100', amount: '100'})
 events << Event.new('AddEntry', {account: '3000', amount: '-100'})
 
+# Push some events into the eventstore
 events.each do |event|
   store.push(event)
 end
 
+# Look at the chart of accounts
 ChartOfAccountsPrinter.print
