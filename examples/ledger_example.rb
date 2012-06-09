@@ -5,9 +5,15 @@ require_relative '../lib/boot'
 # Keep track of a ledger of accounts with events sent to the eventstore.
 
 class Account
-  def initialize name
+  def initialize number,name
+    @number = number
     @name = name
     @balance = BigDecimal('0.0')
+    @subaccounts = []
+  end
+  
+  def number
+    @number
   end
 
   def name
@@ -26,9 +32,10 @@ class Account
     @balance
   end
 
-  def to_s
-    name.to_s
+  def add_subaccount account
+    @subaccounts << account
   end
+
 end
 
 class LedgerStore
@@ -40,19 +47,22 @@ class LedgerStore
     @accounts
   end
 
-  def add_account name
-    account = Account.new(name)
-    @accounts[name] = account
+  def add_account number, name, parent
+    new_account = Account.new(number,name)
+    @accounts[number] = new_account
+    if parent_account = find_account(parent)
+      parent_account.add_subaccount(new_account)
+    end
   end
 
-  def find_account name
-    @accounts[name]
+  def find_account number
+    @accounts[number]
   end
 end
 
 class AddAccountHandler
   def process event
-    Ledger.add_account event.payload[:name]
+    Ledger.add_account event.payload[:number], event.payload[:name], event.payload[:parent]
   end
 end
 
@@ -60,8 +70,10 @@ class ChartOfAccountsPrinter
   def self.print
     puts "#{Ledger.accounts.size} Accounts"
     puts "_____________________________________"
-    Ledger.accounts.each_pair do |name, account|
-      puts account
+    sorted_account_keys = Ledger.accounts.keys.sort
+    sorted_account_keys.each do |key|
+      account = Ledger.find_account(key)
+      puts "#{account.number} - #{account.name}"
     end
   end
 end
@@ -87,11 +99,14 @@ store.add_subscriber(command_processor)
 store.add_subscriber(accounts_list_processor)
 
 events = []
-events << Event.new('CreateAccount', {name: 'assets'})
-events << Event.new('CreateAccount', {name: 'liabilities'})
-events << Event.new('CreateAccount', {name: 'equity'})
-events << Event.new('CreateAccount', {name: 'revenue'})
-events << Event.new('CreateAccount', {name: 'expense  '})
+events << Event.new('CreateAccount', {number: '1000', name: 'assets'})
+events << Event.new('CreateAccount', {number: '2000', name: 'liabilities'})
+events << Event.new('CreateAccount', {number: '3000', name: 'equity'})
+events << Event.new('CreateAccount', {number: '4000', name: 'revenue'})
+events << Event.new('CreateAccount', {number: '5000', name: 'expense'})
+events << Event.new('CreateAccount', {number: '1100', name: 'cash', :parent => '1000'})
+events << Event.new('CreateAccount', {number: '1200', name: 'receivables', :parent => '1000'})
+events << Event.new('CreateAccount', {number: '2100', name: 'payables', :parent => '2000'})
 
 events.each do |event|
   store.push(event)
