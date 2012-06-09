@@ -20,7 +20,7 @@ describe EventStore do
 
     it "publishes events to its subscribers" do
       event = {}
-      @subscriber.expect(:handle, nil, [event])
+      @subscriber.expect(:process, nil, [event])
       @store.add_subscriber(@subscriber)
       @store.publish(event)
       @subscriber.verify

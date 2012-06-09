@@ -50,17 +50,6 @@ class LedgerStore
   end
 end
 
-class CommandProcessor < Processor
-  def process event
-    case event.type
-    when 'CreateAccount'
-      Ledger.add_account event.payload[:name]
-    else
-      raise "WTF is this crap?"
-    end
-  end
-end
-
 class ChartOfAccountsPrinter
   def self.print
     puts "#{Ledger.accounts.size} Accounts"

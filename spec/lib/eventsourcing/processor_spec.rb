@@ -5,7 +5,7 @@ describe Processor do
     @processor = Processor.new
   end
 
-  it "raises on #events" do
-    lambda{ @processor.process }.must_raise RuntimeError
+  it "raises on #process" do
+    lambda{ @processor.process({}) }.must_raise RuntimeError
   end
 end
