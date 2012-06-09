@@ -39,7 +39,6 @@ class LedgerStore
   def add_account name
     account = Account.new(name)
     @accounts[name] = account
-    puts 'created account'
   end
   
   def find_account name
@@ -49,6 +48,12 @@ class LedgerStore
   def each &block
     @accounts.values.each do |account|
       block.call(account)
+    end
+  end
+  
+  def chart_of_accounts
+    @accounts.each do |account|
+      puts account
     end
   end
 end
@@ -78,5 +83,4 @@ events.each do |event|
   store.push(event)
 end
 
-bank_account = Ledger.find_account 'bank'
-puts bank_account
+Ledger.chart_of_accounts
