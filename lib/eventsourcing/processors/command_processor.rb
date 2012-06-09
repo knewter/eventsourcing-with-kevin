@@ -9,13 +9,9 @@ class CommandProcessor < Processor
   end
 
   def process event
-    log("No handler found for #{event.type}") unless handler_for(event.type)
-    case event.type
-    when 'CreateAccount'
-      Ledger.add_account event.payload[:name]
-    else
-      raise "WTF is this crap?"
-    end
+    handler = handler_for(event.type)
+    log("No handler found for #{event.type}") unless handler
+    handler.process(event)
   end
 
   private

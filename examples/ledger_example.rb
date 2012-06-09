@@ -50,6 +50,12 @@ class LedgerStore
   end
 end
 
+class AddAccountHandler
+  def process event
+    Ledger.add_account event.payload[:name]
+  end
+end
+
 class ChartOfAccountsPrinter
   def self.print
     puts "#{Ledger.accounts.size} Accounts"
@@ -72,7 +78,9 @@ class AccountsListProcessor < Processor
 end
 
 Ledger = LedgerStore.new
+add_account_handler = AddAccountHandler.new
 command_processor = CommandProcessor.new
+command_processor.add_handler('CreateAccount', add_account_handler)
 accounts_list_processor = AccountsListProcessor.new
 store = EventStore::Array.new
 store.add_subscriber(command_processor)
