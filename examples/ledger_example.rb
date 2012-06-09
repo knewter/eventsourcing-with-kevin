@@ -63,6 +63,8 @@ end
 
 class ChartOfAccountsPrinter
   def self.print
+    puts "#{Ledger.accounts.size} Accounts"
+    puts "_____________________________________"
     Ledger.accounts.each do |account|
       puts account
     end
@@ -92,7 +94,7 @@ events << Event.new('CreateAccount', {name: 'assets'})
 events << Event.new('CreateAccount', {name: 'liabilities'})
 events << Event.new('CreateAccount', {name: 'equity'})
 events << Event.new('CreateAccount', {name: 'revenue'})
-events << Event.new('CreateAccount', {name: 'expense'})
+events << Event.new('CreateAccount', {name: 'expense  '})
 
 events.each do |event|
   store.push(event)
