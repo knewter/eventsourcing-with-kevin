@@ -1,7 +1,7 @@
 eventsourcing-with-kevin
 ========================
 
-Play with eventsourcing
+Play with eventsourcing.  For more info, you can see the appendix at the bottom.
 
 ### Getting started
     gem install bundler
@@ -12,3 +12,8 @@ Play with eventsourcing
 
 ### Running the tests
     rake test
+
+### Appendix
+[Microsoft CQRS Journey site](http://cqrsjourney.github.com/)
+Microsoft Research has produced some pretty great documentation regarding CQRS
+and Event Sourcing.

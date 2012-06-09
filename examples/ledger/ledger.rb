@@ -1,6 +1,9 @@
 require 'bigdecimal'
 
 require_relative '../../lib/boot'
+
+include EventSourcing
+
 require_relative './domain/account'
 require_relative './domain/entry'
 require_relative './store/ledger_store'

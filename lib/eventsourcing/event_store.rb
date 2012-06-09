@@ -1,32 +1,34 @@
-class EventStore
-  def initialize
-    @subscribers = []
-  end
-
-  def push event
-    # Push the event on the stack
-    events << event
-    # Publish the event to any subscribers
-    publish event
-    # Return it
-    event
-  end
-
-  def add_subscriber subscriber
-    @subscribers << subscriber
-  end
-
-  def publish event
-    @subscribers.each do |subscriber|
-      subscriber.process(event)
+module EventSourcing
+  class EventStore
+    def initialize
+      @subscribers = []
     end
-  end
 
-  def events
-    raise "This is the abstract EventStore.  Override the event storage method in a given implementation."
-  end
+    def push event
+      # Push the event on the stack
+      events << event
+      # Publish the event to any subscribers
+      publish event
+      # Return it
+      event
+    end
 
-  def events_from start=nil
-    raise "This is the abstract EventStore.  Override the events_from method in a given implementation."
+    def add_subscriber subscriber
+      @subscribers << subscriber
+    end
+
+    def publish event
+      @subscribers.each do |subscriber|
+        subscriber.process(event)
+      end
+    end
+
+    def events
+      raise "This is the abstract EventStore.  Override the event storage method in a given implementation."
+    end
+
+    def events_from start=nil
+      raise "This is the abstract EventStore.  Override the events_from method in a given implementation."
+    end
   end
 end
