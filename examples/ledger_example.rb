@@ -25,7 +25,7 @@ class Account
   def balance
     @balance
   end
-  
+
   def to_s
     name.to_s
   end
@@ -35,8 +35,8 @@ class LedgerStore
   def initialize
     @accounts = {}
   end
-  
-  def accounts 
+
+  def accounts
     @accounts
   end
 
@@ -44,7 +44,7 @@ class LedgerStore
     account = Account.new(name)
     @accounts[name] = account
   end
-  
+
   def find_account name
     @accounts[name]
   end
