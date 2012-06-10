@@ -54,9 +54,11 @@ events << Event.new('CreateAccount', {number: '1200', name: 'receivables', :pare
 events << Event.new('CreateAccount', {number: '2100', name: 'payables', :parent => '2000'})
 events << Event.new('DebitAccount', {account: '1100', amount: '100'})
 events << Event.new('CreditAccount', {account: '3000', amount: '100'})
+
+#create a bunch of transactions to test time
 accounts = ['1100','1200','2100']
 r1 = Random.new
-100000.times do 
+200000.times do 
   account1 = accounts[r1.rand(0..2)]
   account2 = accounts[r1.rand(0..2)]  
   amount = r1.rand(10...5000).to_s
@@ -69,4 +71,8 @@ events.each do |event|
 end
 
 # Look at the chart of accounts
+before = Time.now
 ChartOfAccountsPrinter.print
+after = Time.now
+time_to_compute_balance = after - before
+puts "started at #{before} and ended at #{after} or #{time_to_compute_balance}"
