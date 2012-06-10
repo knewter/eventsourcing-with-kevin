@@ -57,8 +57,8 @@ events << Event.new('CreditAccount', {account: '3000', amount: '100'})
 accounts = ['1100','1200','2100']
 r1 = Random.new
 100000.times do 
-  account1 = accounts[r1.rand(0...2)]
-  account2 = accounts[r1.rand(0...2)]  
+  account1 = accounts[r1.rand(0..2)]
+  account2 = accounts[r1.rand(0..2)]  
   amount = r1.rand(10...5000).to_s
   events << Event.new('PostTransaction', {debits: [{account: account1, amount: amount}], credits: [{account: account2, amount: amount}]})
 end
