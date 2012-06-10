@@ -60,7 +60,6 @@ r1 = Random.new
   account1 = accounts[r1.rand(0...2)]
   account2 = accounts[r1.rand(0...2)]  
   amount = r1.rand(10...5000).to_s
-  puts "#{account1} + #{account2} + #{amount}"
   events << Event.new('PostTransaction', {debits: [{account: account1, amount: amount}], credits: [{account: account2, amount: amount}]})
 end
 
