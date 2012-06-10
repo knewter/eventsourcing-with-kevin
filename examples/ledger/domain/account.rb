@@ -1,4 +1,5 @@
 class Account
+  include Calculations
   def initialize number,name
     @number = number
     @name = name
@@ -28,22 +29,6 @@ class Account
 
   def entries
     @entries
-  end
-  
-  def debits
-    entries.select{|entry| entry.is_a? Debit}
-  end
-  
-  def credits
-    entries.select{|entry| entry.is_a? Credit}
-  end
-  
-  def sum_of debits_or_credits
-    debits_or_credits.map(&:amount).inject(BigDecimal.new('0.00'), :+)
-  end
-  
-  def balance
-    sum_of(debits) - sum_of(credits)
   end
 
   def formatted_balance
