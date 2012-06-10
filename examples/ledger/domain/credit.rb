@@ -1,3 +1,3 @@
 class Credit < Entry
-  
+
 end

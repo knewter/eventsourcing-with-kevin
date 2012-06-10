@@ -1,3 +1,3 @@
 class Debit < Entry
-  
+
 end

@@ -13,11 +13,11 @@ class Account
   def name
     @name
   end
-  
+
   def subaccounts
     @subaccounts
   end
-  
+
 #should this lead to creating SummaryAccount(has subaccounts) and DetailAccount(does not have subaccounts)
 #Assets would be an example SummaryAccount
 #SummaryAccount entries are a collection of subaccount entries so you can't post to SummaryAccount 
