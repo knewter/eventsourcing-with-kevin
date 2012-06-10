@@ -8,12 +8,12 @@ class PostTransactionHandler
     debits.each do |debit|
       debit_entry = Debit.new(BigDecimal.new(debit[:amount]))
       prepare(debit_entry, debit[:account])
-      transaction.add_debit(debit_entry)
+      transaction.add_entry(debit_entry)
     end
     credits.each do |credit|
       credit_entry = Credit.new(BigDecimal.new(credit[:amount]))
       prepare(credit_entry, credit[:account])
-      transaction.add_credit(credit_entry)
+      transaction.add_entry(credit_entry)
     end
     transaction.post
   end

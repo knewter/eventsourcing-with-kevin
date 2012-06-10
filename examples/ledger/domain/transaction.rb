@@ -1,9 +1,8 @@
 class Transaction
-  attr_accessor :debits, :credits
+  attr_accessor :entries
 
   def initialize
-    @debits = []
-    @credits = []
+    @entries = []
   end
 
   def balanced?
@@ -21,23 +20,22 @@ class Transaction
   def sum_credits
     sum_of(credits)
   end
+  
+  def debits
+    entries.select{|entry| entry.is_a? Debit}
+  end
+  
+  def credits
+    entries.select{|entry| entry.is_a? Credit}
+  end
 
   def sum_of debits_or_credits
     debits_or_credits.map(&:amount).inject(BigDecimal.new('0.00'), :+)
   end
 
-  def add_debit debit
-    debit.transaction = self
-    @debits << debit
-  end
-
-  def add_credit credit
-    credit.transaction = self
-    @credits << credit
-  end
-
-  def entries
-    debits.concat(credits)
+  def add_entry entry
+    entry.transaction = self
+    @entries << entry
   end
 
   def post
