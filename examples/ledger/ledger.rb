@@ -8,11 +8,13 @@ require_relative './domain/account'
 require_relative './domain/entry'
 require_relative './domain/debit'
 require_relative './domain/credit'
+require_relative './domain/transaction'
 require_relative './store/ledger_store'
 require_relative './handlers/add_entry_to_account_handler'
 require_relative './handlers/create_account_handler'
 require_relative './handlers/debit_account_handler'
 require_relative './handlers/credit_account_handler'
+require_relative './handlers/post_transaction_handler'
 require_relative './reports/chart_of_accounts_printer'
 
 # Provide a slightly more real-world example, though still hugely contrived.
@@ -27,12 +29,14 @@ Ledger = LedgerStore.new
 create_account_handler = CreateAccountHandler.new
 debit_account_handler = DebitAccountHandler.new
 credit_account_handler = CreditAccountHandler.new
+post_transaction_handler = PostTransactionHandler.new
  
 # Initialize the CommandProcessor, and register the handlers
 command_processor = CommandProcessor.new
 command_processor.add_handler('CreateAccount', create_account_handler)
 command_processor.add_handler('DebitAccount', debit_account_handler)
 command_processor.add_handler('CreditAccount', credit_account_handler)
+command_processor.add_handler('PostTransaction', post_transaction_handler)
 
 # Create the eventstore
 store = EventStore::Array.new
@@ -50,6 +54,7 @@ events << Event.new('CreateAccount', {number: '1200', name: 'receivables', :pare
 events << Event.new('CreateAccount', {number: '2100', name: 'payables', :parent => '2000'})
 events << Event.new('DebitAccount', {account: '1100', amount: '100'})
 events << Event.new('CreditAccount', {account: '3000', amount: '100'})
+events << Event.new('PostTransaction', {debits: [{account: '1100', amount: '100'}], credits: [{account: '3000', amount: '100'}]})
 
 # Push some events into the eventstore
 events.each do |event|

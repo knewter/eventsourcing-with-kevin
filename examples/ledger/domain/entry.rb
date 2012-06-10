@@ -1,5 +1,5 @@
 class Entry
-  attr_accessor :amount
+  attr_accessor :amount, :transaction, :account
 
   def initialize amount
     @amount = amount
