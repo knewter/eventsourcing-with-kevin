@@ -30,8 +30,20 @@ class Account
     @entries
   end
   
+  def debits
+    entries.select{|entry| entry.class == Debit}
+  end
+  
+  def credits
+    entries.select{|entry| entry.class == Credit}
+  end
+  
+  def sum_of debits_or_credits
+    debits_or_credits.map(&:amount).inject(BigDecimal.new('0.00'), :+)
+  end
+  
   def balance
-    entries.map(&:amount).inject(BigDecimal.new('0.00'), :+)
+    sum_of(debits) - sum_of(credits)
   end
 
   def formatted_balance

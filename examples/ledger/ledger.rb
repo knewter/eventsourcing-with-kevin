@@ -54,7 +54,15 @@ events << Event.new('CreateAccount', {number: '1200', name: 'receivables', :pare
 events << Event.new('CreateAccount', {number: '2100', name: 'payables', :parent => '2000'})
 events << Event.new('DebitAccount', {account: '1100', amount: '100'})
 events << Event.new('CreditAccount', {account: '3000', amount: '100'})
-events << Event.new('PostTransaction', {debits: [{account: '1100', amount: '100'}], credits: [{account: '3000', amount: '100'}]})
+accounts = ['1100','1200','2100']
+r1 = Random.new
+100000.times do 
+  account1 = accounts[r1.rand(0...2)]
+  account2 = accounts[r1.rand(0...2)]  
+  amount = r1.rand(10...5000).to_s
+  puts "#{account1} + #{account2} + #{amount}"
+  events << Event.new('PostTransaction', {debits: [{account: account1, amount: amount}], credits: [{account: account2, amount: amount}]})
+end
 
 # Push some events into the eventstore
 events.each do |event|
