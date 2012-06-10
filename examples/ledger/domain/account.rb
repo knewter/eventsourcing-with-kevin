@@ -31,11 +31,11 @@ class Account
   end
   
   def debits
-    entries.select{|entry| entry.class == Debit}
+    entries.select{|entry| entry.is_a? Debit}
   end
   
   def credits
-    entries.select{|entry| entry.class == Credit}
+    entries.select{|entry| entry.is_a? Credit}
   end
   
   def sum_of debits_or_credits
