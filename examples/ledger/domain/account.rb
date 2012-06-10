@@ -1,6 +1,6 @@
 class Account
   include Calculations
-  def initialize number,name
+  def initialize number, name
     @number = number
     @name = name
     @subaccounts = []
@@ -28,7 +28,15 @@ class Account
   end
 
   def entries
-    @entries
+    if is_summary?
+        subaccounts.map{|s| s.entries }.flatten
+    else
+      @entries
+    end
+  end
+
+  def is_summary?
+    subaccounts.any?
   end
 
   def formatted_balance
