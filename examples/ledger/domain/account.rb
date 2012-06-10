@@ -13,7 +13,23 @@ class Account
   def name
     @name
   end
+  
+  def subaccounts
+    @subaccounts
+  end
+  
+#should this lead to creating SummaryAccount(has subaccounts) and DetailAccount(does not have subaccounts)
+#Assets would be an example SummaryAccount
+#SummaryAccount entries are a collection of subaccount entries so you can't post to SummaryAccount 
 
+  def add_entry entry
+    @entries << entry
+  end
+
+  def entries
+    @entries
+  end
+  
   def balance
     entries.map(&:amount).inject(BigDecimal.new('0.00'), :+)
   end
@@ -24,13 +40,5 @@ class Account
 
   def add_subaccount account
     @subaccounts << account
-  end
-
-  def add_entry entry
-    @entries << entry
-  end
-
-  def entries
-    @entries
   end
 end

@@ -6,9 +6,13 @@ include EventSourcing
 
 require_relative './domain/account'
 require_relative './domain/entry'
+require_relative './domain/debit'
+require_relative './domain/credit'
 require_relative './store/ledger_store'
+require_relative './handlers/add_entry_to_account_handler'
 require_relative './handlers/create_account_handler'
-require_relative './handlers/add_entry_handler'
+require_relative './handlers/debit_account_handler'
+require_relative './handlers/credit_account_handler'
 require_relative './reports/chart_of_accounts_printer'
 
 # Provide a slightly more real-world example, though still hugely contrived.
@@ -21,12 +25,14 @@ Ledger = LedgerStore.new
 
 # Initialize all of the event handlers we'll be registering
 create_account_handler = CreateAccountHandler.new
-add_entry_handler = AddEntryHandler.new
-
+debit_account_handler = DebitAccountHandler.new
+credit_account_handler = CreditAccountHandler.new
+ 
 # Initialize the CommandProcessor, and register the handlers
 command_processor = CommandProcessor.new
 command_processor.add_handler('CreateAccount', create_account_handler)
-command_processor.add_handler('AddEntry', add_entry_handler)
+command_processor.add_handler('DebitAccount', debit_account_handler)
+command_processor.add_handler('CreditAccount', credit_account_handler)
 
 # Create the eventstore
 store = EventStore::Array.new
@@ -42,8 +48,8 @@ events << Event.new('CreateAccount', {number: '5000', name: 'expense'})
 events << Event.new('CreateAccount', {number: '1100', name: 'cash', :parent => '1000'})
 events << Event.new('CreateAccount', {number: '1200', name: 'receivables', :parent => '1000'})
 events << Event.new('CreateAccount', {number: '2100', name: 'payables', :parent => '2000'})
-events << Event.new('AddEntry', {account: '1100', amount: '100'})
-events << Event.new('AddEntry', {account: '3000', amount: '-100'})
+events << Event.new('DebitAccount', {account: '1100', amount: '100'})
+events << Event.new('CreditAccount', {account: '3000', amount: '100'})
 
 # Push some events into the eventstore
 events.each do |event|
