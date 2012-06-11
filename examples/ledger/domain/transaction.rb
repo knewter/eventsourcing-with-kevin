@@ -1,6 +1,6 @@
 class Transaction
   include Calculations
-  attr_accessor :entries
+  attr_accessor :entries, :occurred_at
 
   def initialize
     @entries = []
